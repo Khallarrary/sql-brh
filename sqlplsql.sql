@@ -1,0 +1,64 @@
+// Criar procedure insere_projeto
+
+CREATE PROCEDURE insere_projeto 
+(p_NOME IN VARCHAR2, p_RESPONSAVEL IN VARCHAR2)
+IS
+BEGIN 
+    INSERT INTO PROJETO (NOME, RESPONSAVEL) VALUES (p_NOME, p_RESPONSAVEL);
+    COMMIT;
+END;
+
+// Criar a função calcula_idade
+
+CREATE OR REPLACE FUNCTION calcula_idade
+(p_DATA_NASCIMENTO IN DATE)
+RETURN NUMBER
+IS 
+v_idaden NUMBER;
+BEGIN 
+    v_IDADE := TRUNC(MONTHS_BETWEEN (SYSDATE, p_DATA_NASCIMENTO)/12);
+RETURN v_IDADE;
+END;
+
+// Criar função finaliza_projeto
+
+CREATE OR REPLACE FUNCTION finaliza_projeto
+(p_ID IN PROJETO.ID%TYPE)
+RETURN DATE
+IS
+v_FIM DATE;
+BEGIN 
+    v_FIM:= TO_DATE(SYSDATE, 'DD/MM/YYYY');
+    UPDATE PROJETO SET FIM = v_FIM WHERE ID = p_ID;
+    RETURN v_FIM; 
+END;
+
+// Validar novo projeto
+
+CREATE OR REPLACE PROCEDURE insere_projeto 
+(p_NOME IN VARCHAR2, p_RESPONSAVEL IN VARCHAR2)
+IS
+BEGIN
+    IF 
+        LENGTH(p_NOME) < 3 OR p_NOME IS NULL 
+            THEN RAISE_APPLICATION_ERROR(-10002, 'Nome invalidor, minimo 4 caracteres.');
+    ELSE 
+        INSERT INTO PROJETO (NOME, RESPONSAVEL) VALUES (p_NOME, p_RESPONSAVEL);
+        END IF;
+    COMMIT;
+END;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
